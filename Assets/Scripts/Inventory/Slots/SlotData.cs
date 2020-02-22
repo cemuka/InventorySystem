@@ -3,12 +3,14 @@ using UnityEngine;
 [CreateAssetMenu(menuName= "Inventory/Slot Data")]
 public class SlotData : ScriptableObject
 {
-    public bool occupied;
-    public InventoryItemData data;
+    [SerializeField]private InventoryItemData inventoryItemData;
 
     public void PlaceInsideThis(InventoryItemData item)
     {
-        this.data = item;
-        occupied = true;
+        this.inventoryItemData = item;
     }
+
+    public bool IsOccupied() => inventoryItemData.metadata != null;
+
+    public InventoryItemData GetItemData() => inventoryItemData;
 }

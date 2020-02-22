@@ -5,11 +5,10 @@ using System.Collections.Generic;
 public class InventoryController : MonoBehaviour 
 {
     public Transform inventoryParent;
-    public Transform upgradePanelParent;
     public Transform infoPanelParent;
 
     private Dictionary<int, Slot> inventorySlots = new Dictionary<int, Slot>();
-    private List<SlotData> currentInventoryDataList = new List<SlotData>();
+    private List<SlotData> slotDataList = new List<SlotData>();
 
     private GameResources gameResources;
 
@@ -17,7 +16,7 @@ public class InventoryController : MonoBehaviour
     {
         ItemCarryHandler.Initiate();
 
-        currentInventoryDataList = Utils.GetPlayerInventory();
+        slotDataList = Utils.GetInventory();
         gameResources = Utils.GetResources();
 
         BuildInventory();
@@ -35,14 +34,15 @@ public class InventoryController : MonoBehaviour
     {
         ItemCarryHandler.DestroyCarrierCanvas();
 
-        //SaveInventoryState();
+        SaveInventoryState();
     }
 
     private void BuildInventory()
     {
+        Debug.Log("inventory build started");
         var slotPrefab = Resources.Load<GameObject>("Prefabs/InventorySlot");
 
-        for (int i = 0; i < currentInventoryDataList.Count; i++)
+        for (int i = 0; i < slotDataList.Count; i++)
         {
             var slotGO = Instantiate(slotPrefab, inventoryParent) as GameObject;
             var slot = slotGO.GetComponent<Slot>();
@@ -50,14 +50,13 @@ public class InventoryController : MonoBehaviour
             inventorySlots.Add(i, slot);
         }
 
-        for (int i = 0; i < currentInventoryDataList.Count; i++)
+        for (int i = 0; i < slotDataList.Count; i++)
         {
-            if (currentInventoryDataList[i].occupied)
+            if (slotDataList[i].IsOccupied())
             {
-                inventorySlots[i].CreateItem(currentInventoryDataList[i].data);
+                inventorySlots[i].CreateItem(slotDataList[i].GetItemData());
             }
         }
-
     }
 
     public void SaveInventoryState()
@@ -66,14 +65,13 @@ public class InventoryController : MonoBehaviour
         {
             if (slot.currentItem)
             {
-                gameResources.UpdatePlayerInventory(slot.slotId, slot.currentItem.GetInventoryItemData(), true);
+                gameResources.UpdatePlayerInventory(slot.slotId, slot.currentItem.GetInventoryItemData());
             }
             else
             {
-                gameResources.UpdatePlayerInventory(slot.slotId, null, false);
+                gameResources.UpdatePlayerInventory(slot.slotId, null);
             }
         }
-
         Debug.Log("Inventory state saved.");
     }
 

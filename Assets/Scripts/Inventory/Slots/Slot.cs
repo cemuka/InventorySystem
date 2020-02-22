@@ -81,8 +81,6 @@ public class Slot : MonoBehaviour, IDropHandler
         }
     }
 
-
-
     private void ChangeStateTo(SlotState targetState)
     {
         state = targetState;

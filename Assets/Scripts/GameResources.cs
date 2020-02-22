@@ -9,7 +9,7 @@ public class GameResources : ScriptableObject
 {
     //setted from editor
     [SerializeField]private List<ItemData> itemResources = new List<ItemData>();
-    [SerializeField]private List<SlotData> playerInventory = new List<SlotData>();
+    [SerializeField]private List<SlotData> playerInventorySlots = new List<SlotData>();
 
     public void Init()
     {
@@ -22,14 +22,14 @@ public class GameResources : ScriptableObject
         return itemResources.Where( item => item.id == itemId).FirstOrDefault();
     }
 
-    public List<SlotData> GetPlayerInventory()
+    public List<SlotData> GetInventorySlots()
     {
-        return playerInventory;
+        return playerInventorySlots;
     }
 
     public SlotData GetFirstEmptySlot()
     {
-        return playerInventory.Where(slot => slot.occupied == false).FirstOrDefault();
+        return playerInventorySlots.Where(slot => slot.IsOccupied() == false ).FirstOrDefault();
     }
 
     public void RecieveItemToInventory(InventoryItemData itemData)
@@ -45,9 +45,8 @@ public class GameResources : ScriptableObject
         }
     }
 
-    public void UpdatePlayerInventory(int id, InventoryItemData data, bool occupied)
+    public void UpdatePlayerInventory(int id, InventoryItemData data)
     {
-        playerInventory[id].data = data;
-        playerInventory[id].occupied = occupied;
+        playerInventorySlots[id].PlaceInsideThis(data);
     }
 }

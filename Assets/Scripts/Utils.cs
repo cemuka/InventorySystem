@@ -22,8 +22,8 @@ public static class Utils
         return gameResources.GetItemDataById(id);
     }
 
-    public static List<SlotData> GetPlayerInventory()
+    public static List<SlotData> GetInventory()
     {
-        return gameResources.GetPlayerInventory();
+        return gameResources.GetInventorySlots();
     }
 }

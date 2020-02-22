@@ -204,25 +204,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1042981192 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4449211438696904105, guid: 29241ff2d3d9b47e5abe9dec34f9e9e9,
-    type: 3}
-  m_PrefabInstance: {fileID: 1052632407}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eca9b05fb49ce47f9bf2fcff62142090, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!224 &1042981193 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 119187553933550334, guid: 29241ff2d3d9b47e5abe9dec34f9e9e9,
-    type: 3}
-  m_PrefabInstance: {fileID: 1052632407}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &1052632407
+--- !u!1001 &1014409272
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -341,6 +323,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 29241ff2d3d9b47e5abe9dec34f9e9e9, type: 3}
+--- !u!114 &1014409273 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4449211438696904105, guid: 29241ff2d3d9b47e5abe9dec34f9e9e9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1014409272}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eca9b05fb49ce47f9bf2fcff62142090, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!224 &1014409274 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 119187553933550334, guid: 29241ff2d3d9b47e5abe9dec34f9e9e9,
+    type: 3}
+  m_PrefabInstance: {fileID: 1014409272}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1086956527
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,7 +370,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c356adb4a4143928a6ec8b1da108ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory: {fileID: 1042981192}
+  inventory: {fileID: 1014409273}
 --- !u!4 &1086956529
 Transform:
   m_ObjectHideFlags: 0
@@ -541,7 +541,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 1042981193}
+  - {fileID: 1014409274}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

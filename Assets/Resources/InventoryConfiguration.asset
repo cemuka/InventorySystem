@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42ca9b6c44cb24d16bc523a89c5642ca, type: 3}
-  m_Name: GameResources
+  m_Name: InventoryConfiguration
   m_EditorClassIdentifier: 
   itemResources:
   - {fileID: 11400000, guid: 41f78f3b90a6c474c81ab920b6645712, type: 2}
@@ -18,7 +18,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1096d8ee1323d4cd29446221252e6e72, type: 2}
   - {fileID: 11400000, guid: 076936b3f6bf84e91a8a3a82504e192e, type: 2}
   - {fileID: 11400000, guid: d7fff85ef231e49368d86ee36a2acc51, type: 2}
-  playerInventory:
+  playerInventorySlots:
   - {fileID: 11400000, guid: fc6d83f42f082441abd842dee19a5c44, type: 2}
   - {fileID: 11400000, guid: ca6c9ff5ebec5474198ac18334a8d29a, type: 2}
   - {fileID: 11400000, guid: cc7a890ed6c494c69b042819a4cf5e11, type: 2}

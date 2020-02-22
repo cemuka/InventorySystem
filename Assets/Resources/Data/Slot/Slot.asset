@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a443a71a24904cccaacd48ac82efe7e, type: 3}
   m_Name: Slot
   m_EditorClassIdentifier: 
-  occupied: 0
-  data:
+  inventoryItemData:
     upgradeState: 0
     metadata: {fileID: 0}
