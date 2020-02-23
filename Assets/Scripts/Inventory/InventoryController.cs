@@ -7,27 +7,18 @@ public class InventoryController : MonoBehaviour
     public Transform inventoryParent;
     public Transform infoPanelParent;
 
-    private Dictionary<int, Slot> inventorySlots = new Dictionary<int, Slot>();
+    private Dictionary<int, InventorySlot> inventorySlots = new Dictionary<int, InventorySlot>();
     private List<SlotData> slotDataList = new List<SlotData>();
 
     private GameResources gameResources;
 
     public void Init() 
     {
-        ItemCarryHandler.Initiate();
-
         slotDataList = Utils.GetInventory();
         gameResources = Utils.GetResources();
 
         BuildInventory();
         //BuildUpgradePanel();
-    }
-
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log(GetFirstEmptySlot().slotId);
-        }
     }
 
     private void OnDisable() 
@@ -45,7 +36,7 @@ public class InventoryController : MonoBehaviour
         for (int i = 0; i < slotDataList.Count; i++)
         {
             var slotGO = Instantiate(slotPrefab, inventoryParent) as GameObject;
-            var slot = slotGO.GetComponent<Slot>();
+            var slot = slotGO.GetComponent<InventorySlot>();
             slot.InitSlot(i);
             inventorySlots.Add(i, slot);
         }
@@ -76,7 +67,7 @@ public class InventoryController : MonoBehaviour
     }
 
     //helper methods
-    private Slot GetFirstEmptySlot()
+    private InventorySlot GetFirstEmptySlot()
     {
         foreach (var slot in inventorySlots.Values)
         {

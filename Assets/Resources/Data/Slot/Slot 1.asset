@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryItemData:
     upgradeState: 0
-    metadata: {fileID: 0}
+    amount: 0
+    metadata: {fileID: 11400000, guid: 1096d8ee1323d4cd29446221252e6e72, type: 2}

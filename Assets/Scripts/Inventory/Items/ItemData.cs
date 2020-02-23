@@ -5,6 +5,7 @@ public class ItemData : ScriptableObject
 {
     public int id;
     public string itemName;
+    public int price;
     public Sprite icon;
     public bool stackable;
     public ItemType type;

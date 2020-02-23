@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42ca9b6c44cb24d16bc523a89c5642ca, type: 3}
   m_Name: InventoryConfiguration
   m_EditorClassIdentifier: 
+  playerGold: 0
+  vendorGold: 0
   itemResources:
   - {fileID: 11400000, guid: 41f78f3b90a6c474c81ab920b6645712, type: 2}
   - {fileID: 11400000, guid: 1bc0c5e574a8147c081ca7d6336d011f, type: 2}
@@ -24,3 +26,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cc7a890ed6c494c69b042819a4cf5e11, type: 2}
   - {fileID: 11400000, guid: d01c58b1d01c74b1e88a1c6d5d1aee3c, type: 2}
   - {fileID: 11400000, guid: 03f8a96cfd9ef4f65a9cde983ae15be8, type: 2}
+  vendorSlots:
+  - {fileID: 11400000, guid: 316f55c84f16f4975a693431b5ffc5cb, type: 2}
+  - {fileID: 11400000, guid: d7f6c1d40817447fba53125c18e59571, type: 2}
+  - {fileID: 11400000, guid: 872088059c20541c294bb69d84c79c27, type: 2}
+  - {fileID: 11400000, guid: ac22266592a234515b93cb4d6480bda1, type: 2}

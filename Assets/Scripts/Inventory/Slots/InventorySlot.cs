@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Slot : MonoBehaviour, IDropHandler
+public class InventorySlot : MonoBehaviour, IDropHandler
 {
     public int slotId;
     public InventoryItem currentItem;
@@ -45,7 +45,8 @@ public class Slot : MonoBehaviour, IDropHandler
         ChangeStateTo(SlotState.Empty);
     }
 
-    public void OnItemReceived(ItemCarry recievedItem)
+
+    public virtual void OnItemReceived(ItemCarry recievedItem)
     {
         switch (state)
         {
@@ -88,7 +89,7 @@ public class Slot : MonoBehaviour, IDropHandler
 
     public virtual void OnDrop(PointerEventData eventData)
     {
-        //Debug.Log("dropped slot id: " + slotId);
+        Debug.Log("dropped slot id: " + slotId);
 
         //notify old parent
         var recievedItem = ItemCarryHandler.GetCurrent();

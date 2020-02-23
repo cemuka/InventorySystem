@@ -34,7 +34,7 @@ public static class ItemCarryHandler
     }
 
 
-    public static GameObject CreateCarryItem(Slot parentSlot, InventoryItemData data)
+    public static GameObject CreateCarryItem(InventorySlot parentSlot, InventoryItemData data)
     {
         //Debug.Log(itemId);
         var itemCarryGO = MonoBehaviour.Instantiate(carryPrefab, carryCanvas.transform);

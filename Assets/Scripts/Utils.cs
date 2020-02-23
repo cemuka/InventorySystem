@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public static class Utils
 {
@@ -20,6 +21,11 @@ public static class Utils
     public static ItemData GetItemDataById(int id)
     {
         return gameResources.GetItemDataById(id);
+    }
+
+    public static List<SlotData> GetVendorInventory()
+    {
+        return gameResources.GetVendorSlots();
     }
 
     public static List<SlotData> GetInventory()

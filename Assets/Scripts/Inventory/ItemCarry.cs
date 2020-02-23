@@ -4,10 +4,10 @@ using UnityEngine.UI;
 public class ItemCarry : MonoBehaviour
 {
     public InventoryItemData data;
-    public Slot parentSlot;
+    public InventorySlot parentSlot;
     public Image icon;
 
-    public void Init(InventoryItemData data, Slot parentSlot)
+    public void Init(InventoryItemData data, InventorySlot parentSlot)
     {
         this.data = data;
         this.parentSlot = parentSlot;

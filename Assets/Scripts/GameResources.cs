@@ -7,13 +7,27 @@ using System;
 [CreateAssetMenu(menuName="GameResources")]
 public class GameResources : ScriptableObject
 {
+    [Header("Player gold")]
+    public int playerGold;
+
+    [Header("Vendor gold")]
+    public int vendorGold;
+
+
     //setted from editor
     [SerializeField]private List<ItemData> itemResources = new List<ItemData>();
     [SerializeField]private List<SlotData> playerInventorySlots = new List<SlotData>();
+    [SerializeField]private List<SlotData> vendorSlots = new List<SlotData>();
+
 
     public void Init()
     {
         Debug.Log("resources initialized.");
+    }
+
+    internal List<SlotData> GetVendorSlots()
+    {
+        return vendorSlots;
     }
 
     //getters setters
