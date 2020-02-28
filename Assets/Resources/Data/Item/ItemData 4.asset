@@ -18,3 +18,5 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 4d0069c7659c64cd7b5cc471c0d9eda4, type: 3}
   stackable: 0
   type: 1
+  description: 'elf people '
+  power: 25

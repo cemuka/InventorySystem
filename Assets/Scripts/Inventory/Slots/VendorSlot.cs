@@ -9,11 +9,6 @@ public class VendorSlot : InventorySlot
 
     }
 
-    public override void OnItemReceived(ItemCarry recievedItem)
-    {
-        Debug.Log(recievedItem.data.metadata.price);
-    }
-
     public override void OnDrop(PointerEventData eventData)
     {
         var recievedItem = ItemCarryHandler.GetCurrent();
@@ -23,13 +18,19 @@ public class VendorSlot : InventorySlot
             recievedItem.parentSlot.OnItemReceived(recievedItem);
         }
         
-        if (recievedItem.parentSlot is InventorySlot)
+        else if (recievedItem.parentSlot is InventorySlot)
         {
             //sell item to vendor
             //notify old parent
-            recievedItem.parentSlot.OnItemLost();   
+            recievedItem.parentSlot.OnItemLost(); 
+            Debug.Log("item sold");
         }
         
         ItemCarryHandler.Clear();
+    }
+
+    public override void OnItemReceived(ItemCarry recievedItem)
+    {
+        base.OnItemReceived(recievedItem);
     }
 }

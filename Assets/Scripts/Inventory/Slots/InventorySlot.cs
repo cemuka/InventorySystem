@@ -89,14 +89,26 @@ public class InventorySlot : MonoBehaviour, IDropHandler
 
     public virtual void OnDrop(PointerEventData eventData)
     {
-        Debug.Log("dropped slot id: " + slotId);
-
-        //notify old parent
         var recievedItem = ItemCarryHandler.GetCurrent();
-        recievedItem.parentSlot.OnItemLost();
+        
+        if (recievedItem.parentSlot is VendorSlot)
+        {
+            //item bought
+            //keep in vendor
+            recievedItem.parentSlot.OnItemReceived(recievedItem);
 
-        //item adopted from this slot
-        OnItemReceived(recievedItem);
+            //item adopted from this slot
+            OnItemReceived(recievedItem);
+        }
+        else if (recievedItem.parentSlot is InventorySlot)
+        {
+            //notify old parent
+            recievedItem.parentSlot.OnItemLost();
+
+            //item adopted from this slot
+            OnItemReceived(recievedItem);
+        }
+
         ItemCarryHandler.Clear();
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
-public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     public int id;
     public InventorySlot parentSlot;
@@ -11,6 +11,9 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public Text stackCountText;
 
     private GameObject itemToCarry;
+    private ToolTip toolTip;
+    
+    private bool toolTipActivated;
 
     private InventoryItemData dataHolder;
 
@@ -64,5 +67,36 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         
         //if no result here put item back to parent slot
         parentSlot.OnItemReceived(itemToCarry.GetComponent<ItemCarry>());
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        toolTip = ItemCarryHandler.CreateToolTip();
+        toolTipActivated = true;
+
+        toolTip.SetText(dataHolder.GetToolTipContent());
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (toolTipActivated)
+        {
+            toolTipActivated = false;
+            ItemCarryHandler.ClearTooltip();
+        }
+    }
+
+    private void Update()
+    {
+        if (toolTipActivated && toolTip != null)
+        {
+            toolTip.transform.position = Input.mousePosition;
+        }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        toolTipActivated = false;
+        ItemCarryHandler.ClearTooltip();
     }
 }

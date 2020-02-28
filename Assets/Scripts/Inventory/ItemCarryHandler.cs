@@ -9,7 +9,10 @@ public static class ItemCarryHandler
     private static Canvas carryCanvas;
 
     private static ItemCarry currentItemCarry;
+    private static ToolTip   currentToolTip;
+    
     private static GameObject carryPrefab;
+    private static GameObject toolTipPrefab;
 
     private static GameObject canvasObj;
 
@@ -21,6 +24,7 @@ public static class ItemCarryHandler
         carryCanvas.sortingOrder = 100;
 
         carryPrefab = Resources.Load<GameObject>("Prefabs/CarryItem") as GameObject;
+        toolTipPrefab = Resources.Load<GameObject>("Prefabs/ToolTipContainer") as GameObject;
     }
 
     public static void DestroyCarrierCanvas()
@@ -46,6 +50,18 @@ public static class ItemCarryHandler
         currentItemCarry.Init(data, parentSlot);
 
         return itemCarryGO;
+    }
+
+    public static ToolTip CreateToolTip()
+    {
+        var toolTopGO = MonoBehaviour.Instantiate(toolTipPrefab, carryCanvas.transform);
+        currentToolTip = toolTopGO.GetComponent<ToolTip>();
+        return currentToolTip; 
+    }
+
+    public static void ClearTooltip()
+    {
+        MonoBehaviour.Destroy(currentToolTip.gameObject);
     }
 
     public static void Clear()
