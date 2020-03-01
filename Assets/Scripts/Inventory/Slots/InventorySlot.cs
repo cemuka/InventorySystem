@@ -94,6 +94,7 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         if (recievedItem.parentSlot is VendorSlot)
         {
             //item bought
+            InventoryEventHandler.InvokeBuyEvent(recievedItem.data.metadata.price);
             //keep in vendor
             recievedItem.parentSlot.OnItemReceived(recievedItem);
 

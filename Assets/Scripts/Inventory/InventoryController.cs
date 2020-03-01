@@ -1,11 +1,14 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class InventoryController : MonoBehaviour 
 {
     public Transform inventoryParent;
     public Transform infoPanelParent;
+
+    public Text playerGold;
 
     private Dictionary<int, InventorySlot> inventorySlots = new Dictionary<int, InventorySlot>();
     private List<SlotData> slotDataList = new List<SlotData>();
@@ -18,7 +21,27 @@ public class InventoryController : MonoBehaviour
         gameResources = Utils.GetResources();
 
         BuildInventory();
-        //BuildUpgradePanel();
+        UpdateGoldText(gameResources.GetPlayerGold().ToString());
+
+        InventoryEventHandler.PlayerBoughtItem += PurchaseItem;
+        InventoryEventHandler.PlayerSoldItem += SellItem;
+    }
+
+    private void UpdateGoldText(string txt)
+    {
+        playerGold.text = txt + " gold";
+    }
+
+    private void PurchaseItem(int price)
+    {
+        gameResources.InventoryTransaction(-price);
+        UpdateGoldText(gameResources.GetPlayerGold().ToString());
+    }
+
+    private void SellItem(int price)
+    {
+        gameResources.InventoryTransaction(price);
+        UpdateGoldText(gameResources.GetPlayerGold().ToString());
     }
 
     private void OnDisable() 

@@ -1,20 +1,15 @@
 ﻿using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 [CreateAssetMenu(menuName="GameResources")]
 public class GameResources : ScriptableObject
 {
     [Header("Player gold")]
-    public int playerGold;
+    [SerializeField] private int playerGold;
 
-    [Header("Vendor gold")]
-    public int vendorGold;
-
-
-    //setted from editor
+    //set from editor
+    [Header("Slot data")]
     [SerializeField]private List<ItemData> itemResources = new List<ItemData>();
     [SerializeField]private List<SlotData> playerInventorySlots = new List<SlotData>();
     [SerializeField]private List<SlotData> vendorSlots = new List<SlotData>();
@@ -31,6 +26,13 @@ public class GameResources : ScriptableObject
     }
 
     //getters setters
+    public int GetPlayerGold() => playerGold;
+
+    public void InventoryTransaction(int price)
+    {
+        playerGold += price;
+    }
+
     public ItemData GetItemDataById(int itemId)
     {
         return itemResources.Where( item => item.id == itemId).FirstOrDefault();

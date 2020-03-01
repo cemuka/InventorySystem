@@ -24,6 +24,7 @@ public class VendorSlot : InventorySlot
             //notify old parent
             recievedItem.parentSlot.OnItemLost(); 
             Debug.Log("item sold");
+            InventoryEventHandler.InvokeSellEvent(recievedItem.data.metadata.price);
         }
         
         ItemCarryHandler.Clear();
