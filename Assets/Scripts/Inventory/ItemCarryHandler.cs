@@ -16,6 +16,8 @@ public static class ItemCarryHandler
 
     private static GameObject canvasObj;
 
+    private static bool tooltipAvailable = true;
+
     public static void Initiate()
     {
         canvasObj = new GameObject("ItemCarryCanvas");
@@ -49,23 +51,36 @@ public static class ItemCarryHandler
 
         currentItemCarry.Init(data, parentSlot);
 
+        tooltipAvailable = false;
         return itemCarryGO;
+    }
+
+    public static bool isTooltipAvailable()
+    {
+        return tooltipAvailable;
     }
 
     public static ToolTip CreateToolTip()
     {
         var toolTopGO = MonoBehaviour.Instantiate(toolTipPrefab, carryCanvas.transform);
         currentToolTip = toolTopGO.GetComponent<ToolTip>();
+        tooltipAvailable = false;
         return currentToolTip; 
     }
 
     public static void ClearTooltip()
     {
-        MonoBehaviour.Destroy(currentToolTip.gameObject);
+        if (currentToolTip != null)
+        {
+            MonoBehaviour.Destroy(currentToolTip.gameObject);
+            currentToolTip = null;
+            tooltipAvailable = true;
+        }
     }
 
     public static void Clear()
     {
         MonoBehaviour.Destroy(currentItemCarry.gameObject);
+        tooltipAvailable = true;
     }
 }

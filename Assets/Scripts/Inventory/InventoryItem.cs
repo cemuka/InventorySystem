@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using System.Collections;
 
 public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
@@ -12,10 +13,9 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private GameObject itemToCarry;
     private ToolTip toolTip;
-    
-    private bool toolTipActivated;
 
     private InventoryItemData dataHolder;
+    private IEnumerator toolTipCoroutine;
 
     public void Init(InventoryItemData itemData, InventorySlot slot)
     {
@@ -32,6 +32,8 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             stackCountText.gameObject.SetActive(false);
         }
+
+        toolTipCoroutine = ShowToolTip();
     }
 
     public InventoryItemData GetInventoryItemData()
@@ -71,32 +73,38 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        toolTip = ItemCarryHandler.CreateToolTip();
-        toolTipActivated = true;
-
-        toolTip.SetText(dataHolder.GetToolTipContent());
+        if (ItemCarryHandler.isTooltipAvailable())
+        {
+            toolTip = ItemCarryHandler.CreateToolTip();
+            StartCoroutine(toolTipCoroutine);        
+            toolTip.SetText(dataHolder.GetToolTipContent());
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (toolTipActivated)
-        {
-            toolTipActivated = false;
-            ItemCarryHandler.ClearTooltip();
-        }
+        toolTip = null;
+        StopCoroutine(toolTipCoroutine);
+        ItemCarryHandler.ClearTooltip();
     }
 
-    private void Update()
+    IEnumerator ShowToolTip()
     {
-        if (toolTipActivated && toolTip != null)
+        toolTip.gameObject.SetActive(false);
+        yield return new WaitForSeconds(.7f);
+
+        while (toolTip != null)
         {
+            toolTip.gameObject.SetActive(true);
             toolTip.transform.position = Input.mousePosition;
+            yield return null;
         }
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        toolTipActivated = false;
+        toolTip = null;
+        StopCoroutine(toolTipCoroutine);
         ItemCarryHandler.ClearTooltip();
     }
 }
