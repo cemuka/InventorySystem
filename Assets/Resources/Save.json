@@ -1,0 +1,18 @@
+{
+    "slots":[
+        {
+            "slotIndex": 2,
+            "item": {
+                "itemId": 2,
+                "amount": 5
+            }
+        },
+        {
+            "slotIndex": 3,
+            "item": {
+                "itemId": 3,
+                "amount": 0
+            }
+        }
+    ]
+}

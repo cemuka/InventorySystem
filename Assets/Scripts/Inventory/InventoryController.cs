@@ -11,20 +11,46 @@ public class InventoryController : MonoBehaviour
     public Text playerGold;
 
     private Dictionary<int, InventorySlot> inventorySlots = new Dictionary<int, InventorySlot>();
-    private List<SlotData> slotDataList = new List<SlotData>();
 
-    private GameResources gameResources;
+    private GameResources _gameResources;
+    private InventorySettings _settings;
 
-    public void Init() 
+    public void Init(InventorySettings settings) 
     {
-        slotDataList = Utils.GetInventory();
-        gameResources = Utils.GetResources();
+        _settings = settings;
+        _gameResources = Utils.GetResources();
 
         BuildInventory();
-        UpdateGoldText(gameResources.GetPlayerGold().ToString());
+        UpdateGoldText(_gameResources.GetPlayerGold().ToString());
 
         InventoryEventHandler.PlayerBoughtItem += PurchaseItem;
         InventoryEventHandler.PlayerSoldItem += SellItem;
+    }
+
+    private void BuildInventory()
+    {
+        Debug.Log("inventory build started");
+        var slotPrefab = Utils.GetInventorySlotPrefab();
+
+        for (int i = 0; i < _settings.slotAmount; i++)
+        {
+            var slotGO = Instantiate(slotPrefab, inventoryParent) as GameObject;
+            var slot = slotGO.GetComponent<InventorySlot>();
+            slot.InitSlot(i);
+            inventorySlots.Add(i, slot);
+        }
+
+        foreach (var savedSlot in _settings.slots)
+        {
+            var newItem = new InventoryItemData();
+
+            newItem.data = Utils.GetItemDataById(savedSlot.item.itemId);
+            if (newItem.data.stackable)
+            {
+                newItem.amount = savedSlot.item.amount;
+            }
+            inventorySlots[savedSlot.slotIndex].CreateItem(newItem);
+        }
     }
 
     private void UpdateGoldText(string txt)
@@ -34,59 +60,26 @@ public class InventoryController : MonoBehaviour
 
     private void PurchaseItem(int price)
     {
-        gameResources.InventoryTransaction(-price);
-        UpdateGoldText(gameResources.GetPlayerGold().ToString());
+        _gameResources.InventoryTransaction(-price);
+        UpdateGoldText(_gameResources.GetPlayerGold().ToString());
     }
 
     private void SellItem(int price)
     {
-        gameResources.InventoryTransaction(price);
-        UpdateGoldText(gameResources.GetPlayerGold().ToString());
+        _gameResources.InventoryTransaction(price);
+        UpdateGoldText(_gameResources.GetPlayerGold().ToString());
     }
 
     private void OnDisable() 
     {
-        ItemCarryHandler.DestroyCarrierCanvas();
+        InventoryDisplayHelper.DestroyCarrierCanvas();
 
         SaveInventoryState();
     }
 
-    private void BuildInventory()
-    {
-        Debug.Log("inventory build started");
-        var slotPrefab = Resources.Load<GameObject>("Prefabs/InventorySlot");
-
-        for (int i = 0; i < slotDataList.Count; i++)
-        {
-            var slotGO = Instantiate(slotPrefab, inventoryParent) as GameObject;
-            var slot = slotGO.GetComponent<InventorySlot>();
-            slot.InitSlot(i);
-            inventorySlots.Add(i, slot);
-        }
-
-        for (int i = 0; i < slotDataList.Count; i++)
-        {
-            if (slotDataList[i].IsOccupied())
-            {
-                inventorySlots[i].CreateItem(slotDataList[i].GetItemData());
-            }
-        }
-    }
 
     public void SaveInventoryState()
     {
-        foreach (var slot in inventorySlots.Values)
-        {
-            if (slot.currentItem)
-            {
-                gameResources.UpdatePlayerInventory(slot.slotId, slot.currentItem.GetInventoryItemData());
-            }
-            else
-            {
-                gameResources.UpdatePlayerInventory(slot.slotId, null);
-            }
-        }
-        Debug.Log("Inventory state saved.");
     }
 
     //helper methods
@@ -102,4 +95,10 @@ public class InventoryController : MonoBehaviour
 
         return null;
     }
+}
+
+public class InventorySettings
+{
+    public int slotAmount;
+    public List<SlotSave> slots;
 }

@@ -21,7 +21,7 @@ public class InventorySlot : MonoBehaviour, IDropHandler
             Destroy(currentItem.gameObject);
         }
 
-        var prefab = Resources.Load<GameObject>("Prefabs/InventoryItem") as GameObject;
+        var prefab = Utils.GetInventoryItemPrefab();
         var itemGO = Instantiate(prefab, this.transform);
         
         itemGO.transform.localPosition = Vector3.zero;
@@ -54,7 +54,7 @@ public class InventorySlot : MonoBehaviour, IDropHandler
 
                 currentItem.icon.enabled = true;
                 ChangeStateTo(SlotState.Occupied);
-                ItemCarryHandler.Clear();
+                InventoryDisplayHelper.ClearItemCarry();
                 break;
 
             case SlotState.Empty: 
@@ -64,8 +64,8 @@ public class InventorySlot : MonoBehaviour, IDropHandler
                 break;
 
             case SlotState.Occupied: 
-                if (currentItem.GetInventoryItemData().metadata.id == recievedItem.data.metadata.id && 
-                    currentItem.GetInventoryItemData().metadata.stackable)
+                if (currentItem.GetInventoryItemData().data.id == recievedItem.data.data.id && 
+                    currentItem.GetInventoryItemData().data.stackable)
                 {
                     //Merged
                     Debug.Log("Merged");
@@ -89,12 +89,12 @@ public class InventorySlot : MonoBehaviour, IDropHandler
 
     public virtual void OnDrop(PointerEventData eventData)
     {
-        var recievedItem = ItemCarryHandler.GetCurrent();
+        var recievedItem = InventoryDisplayHelper.GetCurrent();
         
         if (recievedItem.parentSlot is VendorSlot)
         {
             //item bought
-            InventoryEventHandler.InvokeBuyEvent(recievedItem.data.metadata.price);
+            InventoryEventHandler.InvokeBuyEvent(recievedItem.data.data.price);
             //keep in vendor
             recievedItem.parentSlot.OnItemReceived(recievedItem);
 
@@ -110,6 +110,6 @@ public class InventorySlot : MonoBehaviour, IDropHandler
             OnItemReceived(recievedItem);
         }
 
-        ItemCarryHandler.Clear();
+        InventoryDisplayHelper.ClearItemCarry();
     }
 }

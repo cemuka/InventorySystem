@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bdf8e31ea4e864592bc2ccf34bbcdab0, type: 3}
-  m_Name: ItemData 4
+  m_Name: ItemData 5
   m_EditorClassIdentifier: 
-  id: 4
-  itemName: just staff
-  price: 10
-  icon: {fileID: 21300000, guid: 4d0069c7659c64cd7b5cc471c0d9eda4, type: 3}
+  id: 5
+  itemName: poor staff
+  price: 5
+  icon: {fileID: 21300000, guid: 4a91811f66e2943e1954243debc0f538, type: 3}
   stackable: 0
   type: 1
-  description: 'elf people '
-  power: 25
+  description: for poors exclusively
+  power: 5

@@ -6,23 +6,24 @@ public class VendorController : MonoBehaviour
     public Transform vendorParent;
 
     private Dictionary<int, InventorySlot> vendorSlots = new Dictionary<int, InventorySlot>();
-    private List<SlotData> slotDataList = new List<SlotData>();
 
     private GameResources gameResources;
+    private InventorySettings _settings;
 
-    public void Init()
+    public void Init(InventorySettings settings)
     {
-        slotDataList = Utils.GetVendorInventory();
         gameResources = Utils.GetResources();
+        _settings = settings;
+        _settings.slotAmount = gameResources.GetVendorInventoryAmount();
 
         BuildVendor();
     }
 
     private void BuildVendor()
     {
-        var slotPrefab = Resources.Load<GameObject>("Prefabs/VendorSlot");
+        var slotPrefab = Utils.GetVendorSlotPrefab();
 
-        for (int i = 0; i < slotDataList.Count; i++)
+        for (int i = 0; i < _settings.slotAmount; i++)
         {
             var slotGO = Instantiate(slotPrefab, vendorParent) as GameObject;
             var slot = slotGO.GetComponent<VendorSlot>();
@@ -30,12 +31,16 @@ public class VendorController : MonoBehaviour
             vendorSlots.Add(i, slot);
         }
 
-        for (int i = 0; i < slotDataList.Count; i++)
+        foreach (var savedSlot in _settings.slots)
         {
-            if (slotDataList[i].IsOccupied())
+            var newItem = new InventoryItemData();
+
+            newItem.data = Utils.GetItemDataById(savedSlot.item.itemId);
+            if (newItem.data.stackable)
             {
-                vendorSlots[i].CreateItem(slotDataList[i].GetItemData());
+                newItem.amount = savedSlot.item.amount;
             }
+            vendorSlots[savedSlot.slotIndex].CreateItem(newItem);
         }
     }
 }

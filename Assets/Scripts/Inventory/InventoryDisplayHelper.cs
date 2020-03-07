@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
 
-public static class ItemCarryHandler 
+public static class InventoryDisplayHelper 
 {
     private static Canvas carryCanvas;
 
@@ -16,7 +12,7 @@ public static class ItemCarryHandler
 
     private static GameObject canvasObj;
 
-    private static bool tooltipAvailable = true;
+    private static bool tooltipAvailable;
 
     public static void Initiate()
     {
@@ -25,8 +21,9 @@ public static class ItemCarryHandler
         carryCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
         carryCanvas.sortingOrder = 100;
 
-        carryPrefab = Resources.Load<GameObject>("Prefabs/CarryItem") as GameObject;
-        toolTipPrefab = Resources.Load<GameObject>("Prefabs/ToolTipContainer") as GameObject;
+        carryPrefab = Utils.GetItemCarryPrefab();
+        toolTipPrefab = Utils.GetTooltipPrefab();
+        tooltipAvailable = true;
     }
 
     public static void DestroyCarrierCanvas()
@@ -38,7 +35,6 @@ public static class ItemCarryHandler
     {
         return currentItemCarry;
     }
-
 
     public static GameObject CreateCarryItem(InventorySlot parentSlot, InventoryItemData data)
     {
@@ -55,7 +51,7 @@ public static class ItemCarryHandler
         return itemCarryGO;
     }
 
-    public static bool isTooltipAvailable()
+    public static bool TooltipIsAvailable()
     {
         return tooltipAvailable;
     }
@@ -78,7 +74,7 @@ public static class ItemCarryHandler
         }
     }
 
-    public static void Clear()
+    public static void ClearItemCarry()
     {
         MonoBehaviour.Destroy(currentItemCarry.gameObject);
         tooltipAvailable = true;

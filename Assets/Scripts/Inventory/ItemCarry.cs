@@ -11,7 +11,7 @@ public class ItemCarry : MonoBehaviour
     {
         this.data = data;
         this.parentSlot = parentSlot;
-        icon.sprite = data.metadata.icon;
+        icon.sprite = data.data.icon;
         this.transform.localScale = Vector3.one * 1.5f;
     }
 }

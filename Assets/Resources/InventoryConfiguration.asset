@@ -13,21 +13,9 @@ MonoBehaviour:
   m_Name: InventoryConfiguration
   m_EditorClassIdentifier: 
   playerGold: 0
-  vendorGold: 0
   itemResources:
   - {fileID: 11400000, guid: 41f78f3b90a6c474c81ab920b6645712, type: 2}
   - {fileID: 11400000, guid: 1bc0c5e574a8147c081ca7d6336d011f, type: 2}
   - {fileID: 11400000, guid: 1096d8ee1323d4cd29446221252e6e72, type: 2}
   - {fileID: 11400000, guid: 076936b3f6bf84e91a8a3a82504e192e, type: 2}
   - {fileID: 11400000, guid: d7fff85ef231e49368d86ee36a2acc51, type: 2}
-  playerInventorySlots:
-  - {fileID: 11400000, guid: fc6d83f42f082441abd842dee19a5c44, type: 2}
-  - {fileID: 11400000, guid: ca6c9ff5ebec5474198ac18334a8d29a, type: 2}
-  - {fileID: 11400000, guid: cc7a890ed6c494c69b042819a4cf5e11, type: 2}
-  - {fileID: 11400000, guid: d01c58b1d01c74b1e88a1c6d5d1aee3c, type: 2}
-  - {fileID: 11400000, guid: 03f8a96cfd9ef4f65a9cde983ae15be8, type: 2}
-  vendorSlots:
-  - {fileID: 11400000, guid: 316f55c84f16f4975a693431b5ffc5cb, type: 2}
-  - {fileID: 11400000, guid: d7f6c1d40817447fba53125c18e59571, type: 2}
-  - {fileID: 11400000, guid: 872088059c20541c294bb69d84c79c27, type: 2}
-  - {fileID: 11400000, guid: ac22266592a234515b93cb4d6480bda1, type: 2}

@@ -11,9 +11,42 @@ public class MainController : MonoBehaviour
     void Start()
     {
         Utils.Initiate();
-        ItemCarryHandler.Initiate();
+        InventoryDisplayHelper.Initiate();
 
-        inventory.Init();
-        vendor.Init();
+        var resources = Utils.GetResources();
+        var save = resources.GetSaveResource();
+        var inventorySettings = new InventorySettings();
+        inventorySettings.slotAmount = resources.GetInventorySlotAmount();
+        inventorySettings.slots = save.slots;
+
+        inventory.Init(inventorySettings);
+
+        var vendorSettings = new InventorySettings();
+        vendorSettings.slotAmount = resources.GetVendorInventoryAmount();
+
+        vendorSettings.slots = new List<SlotSave>();
+        vendorSettings.slots.Add( new SlotSave(){
+            slotIndex = 0,
+            item = new ItemSave(){itemId = 0}
+        });
+
+        vendorSettings.slots.Add( new SlotSave(){
+            slotIndex = 1,
+            item = new ItemSave(){itemId = 3}
+        });
+
+        vendorSettings.slots.Add( new SlotSave(){
+            slotIndex = 2,
+            item = new ItemSave(){itemId = 2}
+        });
+
+        vendorSettings.slots.Add( new SlotSave(){
+            slotIndex = 3,
+            item = new ItemSave(){itemId = 4}
+        });
+
+
+
+        vendor.Init(vendorSettings);
     }
 }

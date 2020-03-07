@@ -11,7 +11,7 @@ public class VendorSlot : InventorySlot
 
     public override void OnDrop(PointerEventData eventData)
     {
-        var recievedItem = ItemCarryHandler.GetCurrent();
+        var recievedItem = InventoryDisplayHelper.GetCurrent();
         if (recievedItem.parentSlot is VendorSlot)
         {
             //do nothing
@@ -24,10 +24,10 @@ public class VendorSlot : InventorySlot
             //notify old parent
             recievedItem.parentSlot.OnItemLost(); 
             Debug.Log("item sold");
-            InventoryEventHandler.InvokeSellEvent(recievedItem.data.metadata.price);
+            InventoryEventHandler.InvokeSellEvent(recievedItem.data.data.price);
         }
         
-        ItemCarryHandler.Clear();
+        InventoryDisplayHelper.ClearItemCarry();
     }
 
     public override void OnItemReceived(ItemCarry recievedItem)

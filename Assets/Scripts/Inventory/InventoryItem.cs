@@ -14,19 +14,20 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private GameObject itemToCarry;
     private ToolTip toolTip;
 
-    private InventoryItemData dataHolder;
+    private InventoryItemData content;
     private IEnumerator toolTipCoroutine;
+    private WaitForSeconds repaintRate;
 
     public void Init(InventoryItemData itemData, InventorySlot slot)
     {
         this.parentSlot = slot;
-        dataHolder = itemData;
-        icon.sprite = dataHolder.metadata.icon;
+        content = itemData;
+        icon.sprite = content.data.icon;
 
-        if (dataHolder.metadata.stackable)
+        if (content.data.stackable)
         {
             stackCountText.gameObject.SetActive(true);
-            stackCountText.text = dataHolder.amount.ToString();
+            stackCountText.text = content.amount.ToString();
         }
         else
         {
@@ -34,16 +35,17 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
 
         toolTipCoroutine = ShowToolTipCoroutine();
+        repaintRate = new WaitForSeconds(.05f);
     }
 
     public InventoryItemData GetInventoryItemData()
     {
-        return dataHolder;
+        return content;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        itemToCarry = ItemCarryHandler.CreateCarryItem(parentSlot, dataHolder);
+        itemToCarry = InventoryDisplayHelper.CreateCarryItem(parentSlot, content);
         parentSlot.OnItemOnCarry();
     }
 
@@ -61,7 +63,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 //dropped on a slot
                 //slot handles the drop event itself
                 Destroy(itemToCarry.gameObject);
-                ItemCarryHandler.Clear();
+                InventoryDisplayHelper.ClearItemCarry();
                 break;
             }
             
@@ -73,11 +75,11 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (ItemCarryHandler.isTooltipAvailable())
+        if (InventoryDisplayHelper.TooltipIsAvailable())
         {
-            toolTip = ItemCarryHandler.CreateToolTip();
+            toolTip = InventoryDisplayHelper.CreateToolTip();
             ShowTooltip();       
-            toolTip.SetText(dataHolder.GetToolTipContent());
+            toolTip.SetText(content.GetToolTipContent());
         }
     }
 
@@ -85,14 +87,14 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         toolTip = null;
         StopCoroutine(toolTipCoroutine);
-        ItemCarryHandler.ClearTooltip();
+        InventoryDisplayHelper.ClearTooltip();
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
         toolTip = null;
         StopCoroutine(toolTipCoroutine);
-        ItemCarryHandler.ClearTooltip();
+        InventoryDisplayHelper.ClearTooltip();
     }
     
     private void ShowTooltip()
@@ -110,7 +112,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             toolTip.gameObject.SetActive(true);
             toolTip.transform.position = Input.mousePosition;
-            yield return null;
+            yield return repaintRate;
         }
     }
 }

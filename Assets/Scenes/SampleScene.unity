@@ -545,7 +545,7 @@ PrefabInstance:
     - target: {fileID: 119187553933550334, guid: 06d758cd565ba40f2b2c3b5644d204db,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 460
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 119187553933550334, guid: 06d758cd565ba40f2b2c3b5644d204db,
         type: 3}
@@ -586,6 +586,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: VendorView
+      objectReference: {fileID: 0}
+    - target: {fileID: 8968667345064806637, guid: 06d758cd565ba40f2b2c3b5644d204db,
+        type: 3}
+      propertyPath: m_Padding.m_Right
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 8968667345064806637, guid: 06d758cd565ba40f2b2c3b5644d204db,
+        type: 3}
+      propertyPath: m_Padding.m_Left
+      value: 40
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06d758cd565ba40f2b2c3b5644d204db, type: 3}
