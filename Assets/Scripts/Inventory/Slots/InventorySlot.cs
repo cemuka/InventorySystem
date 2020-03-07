@@ -64,15 +64,19 @@ public class InventorySlot : MonoBehaviour, IDropHandler
                 break;
 
             case SlotState.Occupied: 
-                if (currentItem.GetInventoryItemData().data.id == recievedItem.data.data.id && 
-                    currentItem.GetInventoryItemData().data.stackable)
+                // if (currentItem.GetInventoryItemData().data.id == recievedItem.data.data.id && 
+                //     currentItem.GetInventoryItemData().data.stackable)
+                // {
+                //     //Merged
+                //     Debug.Log("Merged");
+                // }
+                if(recievedItem.parentSlot is VendorSlot)
                 {
-                    //Merged
-                    Debug.Log("Merged");
+                    //Swap Items
+                    Debug.Log("doesn't allowed");
                 }
                 else
                 {
-                    //Swap Items
                     Debug.Log("Swap");
                     var target = recievedItem.data;
                     recievedItem.parentSlot.CreateItem(currentItem.GetInventoryItemData());
