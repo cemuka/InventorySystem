@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: ItemData 3
   m_EditorClassIdentifier: 
   id: 3
-  itemName: just staff
+  itemName: scroll
   price: 10
-  icon: {fileID: 21300000, guid: 4d0069c7659c64cd7b5cc471c0d9eda4, type: 3}
-  stackable: 0
-  type: 1
+  icon: {fileID: 21300000, guid: fb6ad4e939305475189a477ff53c5798, type: 3}
+  stackable: 1
+  type: 0
   description: 'elf people '
   power: 25

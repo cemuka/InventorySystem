@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: ItemData 2
   m_EditorClassIdentifier: 
   id: 2
-  itemName: good staff
+  itemName: cauldron
   price: 400
-  icon: {fileID: 21300000, guid: 4a91811f66e2943e1954243debc0f538, type: 3}
-  stackable: 1
+  icon: {fileID: 21300000, guid: bb6d4bf3e97a040a3b3abbb7906a8192, type: 3}
+  stackable: 0
   type: 1
   description: skull smiles
   power: 15

@@ -4,9 +4,23 @@ using UnityEngine.UI;
 
 public class VendorSlot : InventorySlot
 {
-    public void Init()
+    public override void CreateItem(InventoryItemData itemData)
     {
+        if (currentItem)
+        {
+            Destroy(currentItem.gameObject);
+        }
 
+        var prefab = Utils.GetInventoryItemPrefab();
+        var itemGO = Instantiate(prefab, this.transform);
+        
+        itemGO.transform.localPosition = Vector3.zero;
+        itemGO.transform.localScale = Vector3.one;
+
+        currentItem = itemGO.GetComponent<InventoryItem>();
+        currentItem.Init(itemData, this);
+
+        ChangeStateTo(SlotState.Occupied);
     }
 
     public override void OnDrop(PointerEventData eventData)

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: ItemData 1
   m_EditorClassIdentifier: 
   id: 1
-  itemName: bad staff
+  itemName: bastard sword
   price: 250
-  icon: {fileID: 21300000, guid: 4d0069c7659c64cd7b5cc471c0d9eda4, type: 3}
+  icon: {fileID: 21300000, guid: f748e0c8e61844b398319c00f2993153, type: 3}
   stackable: 1
   type: 1
   description: bad people gonna bad

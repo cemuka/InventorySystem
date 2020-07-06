@@ -35,7 +35,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
 
         toolTipCoroutine = ShowToolTipCoroutine();
-        repaintRate = new WaitForSeconds(.05f);
+        repaintRate = new WaitForSeconds(.02f);
     }
 
     public InventoryItemData GetInventoryItemData()

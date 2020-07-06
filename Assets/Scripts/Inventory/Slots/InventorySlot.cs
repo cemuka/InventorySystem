@@ -9,12 +9,12 @@ public class InventorySlot : MonoBehaviour, IDropHandler
     public InventoryItem currentItem;
     public SlotState state = SlotState.Empty;
 
-    public void InitSlot(int id)
+    public virtual void InitSlot(int id)
     {
         this.slotId = id;
     }
 
-    public void CreateItem(InventoryItemData itemData) 
+    public virtual void CreateItem(InventoryItemData itemData) 
     {
         if (currentItem)
         {
@@ -85,7 +85,7 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         }
     }
 
-    private void ChangeStateTo(SlotState targetState)
+    protected void ChangeStateTo(SlotState targetState)
     {
         state = targetState;
     }
