@@ -45,7 +45,6 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         ChangeStateTo(SlotState.Empty);
     }
 
-
     public virtual void OnItemReceived(ItemCarry recievedItem)
     {
         switch (state)

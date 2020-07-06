@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bdf8e31ea4e864592bc2ccf34bbcdab0, type: 3}
-  m_Name: ItemData 4
+  m_Name: ItemData 3
   m_EditorClassIdentifier: 
-  id: 4
+  id: 3
   itemName: just staff
   price: 10
   icon: {fileID: 21300000, guid: 4d0069c7659c64cd7b5cc471c0d9eda4, type: 3}

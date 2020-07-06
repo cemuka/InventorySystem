@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42ca9b6c44cb24d16bc523a89c5642ca, type: 3}
   m_Name: InventoryConfiguration
   m_EditorClassIdentifier: 
-  playerGold: 0
+  playerGold: 2200
+  playerInventorySlotAmount: 8
+  vendorInventorySlotAmount: 4
   itemResources:
   - {fileID: 11400000, guid: 41f78f3b90a6c474c81ab920b6645712, type: 2}
   - {fileID: 11400000, guid: 1bc0c5e574a8147c081ca7d6336d011f, type: 2}
