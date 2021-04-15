@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 037dc7ebb384c400487800400fd53e60, type: 3}
+  m_Name: GameResources
+  m_EditorClassIdentifier: 
+  itemDatabase: {fileID: 11400000, guid: b26f9bf0d583f4f5da068b0b555dec4d, type: 2}
+  orderDatabase: {fileID: 11400000, guid: f48e53f253eec458384339e81bb9aedd, type: 2}
+  playerGold: 500
+  inventoryConfigs:
+    maxStackBasicMaterial: 10
+    maxStackPolishMaterial: 3
+    maxPlayerInventorySlot: 24
+  forgeConfigs:
+    maxTemperature: 1000
+    minTemperature: 25
+    coolingPerItemLevel: 3
+    forgeChargePerHit: 10

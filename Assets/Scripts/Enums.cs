@@ -1,12 +1,13 @@
 public enum SlotState
 {
     Empty,
+    Filled,
     OnCarry,
-    Occupied
 }
 
 public enum ItemType
 {
-    UpgradeScroll,
-    Item
+    BasicMaterial,
+    PolishingMaterial,
+    Product
 }
