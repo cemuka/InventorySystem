@@ -108,6 +108,20 @@ public class InventorySystem : MonoBehaviour
     private void OnItemPointerClick(ItemOrigin origin, int itemId, PointerEventData eventData)
     {
         Signals.Get<OnHideTooltipSignal>().Invoke();
+
+        if (origin == ItemOrigin.PlayerInventory)
+        {
+            if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                var item    = _inventoryQuery.TakeSnapshot().Single(x => x.id == itemId);
+                var itemDef = _resources.itemDatabase.FetchItem(item.definitionId);
+                
+                playerInventory.RemoveItem(item.id, 1);
+
+                _currentGold += itemDef.price;
+                UpdateGold();
+            }
+        }
     }
 
     //  event listeners

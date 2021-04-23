@@ -83,7 +83,7 @@ public class Inventory : MonoBehaviour, IInventoryQuery
 
     public void RemoveItem(int id, int stackAmount)
     {
-        var item = _items[_itemOnDrag.id];
+        var item = _items[id];
 
         if (item.currentStack > 1)
         {
