@@ -2,21 +2,16 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public int id;
     public int parentSlotId;
     public int currentStack;
+    public ItemOrigin origin;
     
     public string definitionId;
     public ItemView view;
 
-    public event Action<int, PointerEventData> OnItemBeginDragEvent;
-    public event Action<int, PointerEventData> OnItemDragEvent;
-    public event Action<int, PointerEventData> OnItemEndDragEvent;
-
-    //  0 - id
-    //  1 - parentIndexSlot
     public virtual void Init(int id, int parentSlotId)
     {
         this.id = id;
@@ -37,32 +32,32 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        OnItemBeginDragEvent?.Invoke(id, eventData);
+        Signals.Get<OnItemBeginDragSignal>().Invoke(origin, id, eventData);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        OnItemDragEvent?.Invoke(id, eventData);
+        Signals.Get<OnItemDragSignal>().Invoke(origin, id, eventData);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        OnItemEndDragEvent?.Invoke(id, eventData);
+        Signals.Get<OnItemEndDragSignal>().Invoke(origin, id, eventData);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        EventSignals.InvokeOnItemTooltipShowEvent(definitionId);
+        Signals.Get<OnItemPointerEnterSignal>().Invoke(origin, id, eventData);
     }
     
     public void OnPointerExit(PointerEventData eventData)
     {
-        EventSignals.InvokeOnItemTooltipHideEvent();
+        Signals.Get<OnItemPointerExitSignal>().Invoke(origin, id, eventData);
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
-        EventSignals.InvokeOnItemTooltipHideEvent();
+        Signals.Get<OnItemPointerClickSignal>().Invoke(origin, id, eventData);
     }
 
     public void IncrementStack()
@@ -77,14 +72,14 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         UpdateStackText();
     }
 
-    private void UpdateStackText()
-    {
-        view.stackText.text = currentStack.ToString();
-    }
-
     public void CleanStackText()
     {
         view.stackText.text = "";
+    }
+
+    private void UpdateStackText()
+    {
+        view.stackText.text = currentStack.ToString();
     }
 
 }

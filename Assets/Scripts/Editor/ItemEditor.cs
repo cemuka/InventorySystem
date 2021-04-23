@@ -123,7 +123,7 @@ public class ItemEditor : EditorWindow
     void DisplayEditMainArea ()
     {
         var item = _database.definitions[_selectedIndex];
-        EditorGUILayout.LabelField ("Id: ", _database.definitions[_selectedIndex].Id);
+        EditorGUILayout.LabelField ("Id: ", _database.definitions[_selectedIndex].DefId);
         item.itemName        = EditorGUILayout.TextField    ("Name",         item.itemName);
         item.icon            = EditorGUILayout.ObjectField  ("Icon: ",       item.icon, typeof(Sprite), false) as Sprite;
         item.itemType        = (ItemType)EditorGUILayout.EnumPopup("Type: ", item.itemType);

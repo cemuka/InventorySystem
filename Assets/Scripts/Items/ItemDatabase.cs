@@ -10,7 +10,7 @@ public class ItemDatabase : ScriptableObject
 
     public ItemDefinition FetchItem(string id)
     {
-        return definitions.Find(i => i.Id == id);
+        return definitions.Find(i => i.DefId == id);
     }
 
     public void SortByPrice()

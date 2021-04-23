@@ -11,3 +11,9 @@ public enum ItemType
     PolishingMaterial,
     Product
 }
+
+public enum ItemOrigin
+{
+    PlayerInventory,
+    Vendor
+}

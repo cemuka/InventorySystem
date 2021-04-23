@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class TooltipSystem : MonoBehaviour
 {
@@ -13,17 +14,11 @@ public class TooltipSystem : MonoBehaviour
         _resources = resources;
         tooltip.Hide();
 
-        EventSignals.OnItemTooltipShow += OnTooltipShow;
-        EventSignals.OnItemTooltipHide += OnTooltipHide;
-        EventSignals.OnItemOnDragEvent += OnItemDrag;
+        Signals.Get<OnShowTooltipSignal>().AddListener(Show);
+        Signals.Get<OnHideTooltipSignal>().AddListener(Hide);
     }
 
-    private void OnItemDrag(EventType type, int id)
-    {
-        tooltip.Hide();
-    }
-
-    private void OnTooltipShow(string defId)
+    private void Show(string defId)
     {
         var item = _resources.itemDatabase.FetchItem(defId);
         var recipe = new TooltipBuilder().AddLine(item.itemName.WithSize(20).AsColor("yellow").AsBold())
@@ -33,7 +28,7 @@ public class TooltipSystem : MonoBehaviour
         tooltip.Show(recipe.Extract());
     }
 
-    private void OnTooltipHide()
+    private void Hide()
     {
         tooltip.Hide();
     }

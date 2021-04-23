@@ -9,7 +9,7 @@ public class ItemDefinition
     public string itemName;
     
     [SerializeField]private string _id;
-    public  string  Id { get {   return _id; }   }
+    public  string  DefId { get {   return _id; }   }
 
     public ItemType itemType;
     public int level;

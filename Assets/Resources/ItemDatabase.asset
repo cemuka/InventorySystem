@@ -55,3 +55,17 @@ MonoBehaviour:
     icon: {fileID: 21300000, guid: 80e3c7292e8432647bea3910e1dcf46e, type: 3}
     description: 
     price: 15
+  - itemName: Wood trunk
+    _id: rwyp4kDpG0iZQ1m95qUIUQ
+    itemType: 0
+    level: 2
+    icon: {fileID: 21300000, guid: c2ec8f099725de240ba681036023ff0e, type: 3}
+    description: 
+    price: 22
+  - itemName: Polishing Water
+    _id: y7KAF4YeZUicT3zanuUlGw
+    itemType: 1
+    level: 5
+    icon: {fileID: 21300000, guid: 3c245f8861c09f249989163b0d825f8d, type: 3}
+    description: 
+    price: 200

@@ -2,42 +2,43 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using UnityEngine.EventSystems;
+using System.Linq;
 
 public class Inventory : MonoBehaviour, IInventoryQuery
 {
+    public event Action<InventoryItem, int>     OnItemDroppedEvent;
+
     private Dictionary<int, InventorySlot> _slots;
     private Dictionary<int, InventoryItem> _items;
     
 
     private GameResources _resources;
-    private Transform _slotsParent;
     private Transform _itemDragParent;
     private InventoryItem _itemOnDrag;
+    private InventoryOptions _options;
 
-    public void Init(GameResources resources, Transform slotsParent, Transform itemDragParent, int slotCount)
+    public void Init(InventoryOptions options)
     {
-        _resources = resources;
+        _options = options;
+        _resources = _options.resources;
         _slots = new Dictionary<int, InventorySlot>();
         _items = new Dictionary<int, InventoryItem>();
+
+        Signals.Get<OnItemBeginDragSignal>().AddListener(OnItemBeginDrag);
+        Signals.Get<OnItemDragSignal>().AddListener(OnItemDrag);
+        Signals.Get<OnItemEndDragSignal>().AddListener(OnItemEndDrag);
         
-        _slotsParent = slotsParent;
-        _itemDragParent = itemDragParent;
         CreateItemForDrag();
 
-        for (int i = 0; i < slotCount; i++)
+        for (int i = 0; i < _options.slotCount; i++)
         {
             CreateSlot(i);
         }
     }
 
-    public IEnumerable<InventoryItem> TakeSnapshot()
-    {
-        return _items.Values;
-    }
-
     private void CreateItemForDrag()
     {
-        _itemOnDrag = PrefabLoader.CreatePrefabAs<InventoryItem>("Prefabs/InventoryItem", _itemDragParent);
+        _itemOnDrag = PrefabLoader.CreatePrefabAs<InventoryItem>("Prefabs/InventoryItem", _options.itemDragTransform);
         _itemOnDrag.gameObject.SetActive(false);
         _itemOnDrag.CleanStackText();
     }
@@ -45,13 +46,26 @@ public class Inventory : MonoBehaviour, IInventoryQuery
     private void CreateSlot(int index)
     {
         var slotPrefab = PrefabLoader.LoadPrefab("Prefabs/InventorySlot");
-        var slot = Instantiate(slotPrefab, _slotsParent).GetComponent<InventorySlot>();
+        var slot = Instantiate(slotPrefab, _options.contentTransform).GetComponent<InventorySlot>();
         slot.Init(index);
         _slots.Add(index, slot);
         
         slot.OnItemDropEvent += OnItemDrop;
     }
 
+    //  IInventoryQuery implement
+    public IEnumerable<InventoryItem> TakeSnapshot()
+    {
+        return _items.Values;
+    }
+
+    public bool Contains(string defId)
+    {
+        return _items.Values.Any(item => item.definitionId == defId);
+    }
+
+
+    //  inventory actions
     public void AddItem(string defId, int slotIndex)
     {
         var item = PrefabLoader.CreatePrefabAs<InventoryItem>("Prefabs/InventoryItem", transform);
@@ -59,15 +73,12 @@ public class Inventory : MonoBehaviour, IInventoryQuery
 
         item.Init(IdFactory.CreateInstanceId(), slotIndex);
         item.SetIcon(itemDef.icon);
-        item.definitionId = itemDef.Id;
+        item.definitionId = itemDef.DefId;
         item.CleanStackText();
+        item.origin = _options.origin;
         
         _items.Add(item.id, item);
         _slots[slotIndex].PlaceItem(item);
-
-        item.OnItemBeginDragEvent   += OnItemBeginDrag;
-        item.OnItemDragEvent        += OnItemDrag;
-        item.OnItemEndDragEvent     += OnItemEndDrag;
     }
 
     public void RemoveItem(int id, int stackAmount)
@@ -86,49 +97,133 @@ public class Inventory : MonoBehaviour, IInventoryQuery
             _items.Remove(id);
         }
     }
-
-
-    //  events
-    public void OnItemBeginDrag(int id, PointerEventData eventData)
+    
+    public bool HandleItemReceive(int slotIndex, InventoryItem receivedItem)
     {
-        var item = _items[id];
-        var itemDef = _resources.itemDatabase.FetchItem(item.definitionId);
+        var itemDef = _resources.itemDatabase.FetchItem(receivedItem.definitionId);
 
-        _itemOnDrag.definitionId = itemDef.Id;
-        _itemOnDrag.id = item.id;
-        _itemOnDrag.SetIcon(itemDef.icon);
-        _itemOnDrag.gameObject.SetActive(true);
-        _itemOnDrag.GetComponent<CanvasGroup>().blocksRaycasts = false;
-    }
-
-    public void OnItemDrag(int id, PointerEventData eventData)
-    {
-        _itemOnDrag.transform.position = Input.mousePosition;
-    }
-
-    public void OnItemEndDrag(int id, PointerEventData eventData)
-    {
-        _itemOnDrag.gameObject.SetActive(false);
-        _itemOnDrag.GetComponent<CanvasGroup>().blocksRaycasts = true;
-    }
-
-    private void OnItemDrop(int slotId, PointerEventData eventData)
-    {
-        var item = eventData.pointerDrag.GetComponent<InventoryItem>();
-        if (item != null)
+        //  check if item already in inventory
+        if (Contains(itemDef.DefId))
         {
-            if (IsSlotEmpty(slotId))
+            var item = GetItemWithAvailableStack(itemDef.DefId);
+            if (item == null)
             {
-                _slots[item.parentSlotId].SetEmpty();
-
-                _slots[slotId].PlaceItem(item);
-                item.SetParentSlot(slotId);                
+                var emptySlot = FindFirstEmptySlot();
+                if (emptySlot == null)
+                {
+                    Debug.Log("Inventory full.");
+                    return false;
+                }
+                else
+                {
+                    AddItem(itemDef.DefId, slotIndex);
+                    return true;
+                }
             }
             else
             {
-                SwapItems(_slots[slotId].GetItemId(), _slots[item.parentSlotId].GetItemId());
+                _items[item.id].IncrementStack();
+                return true;
             }
-            item.GetComponent<CanvasGroup>().blocksRaycasts = true;
+        }
+
+        //  check if slot is filled already
+        if (IsSlotEmpty(slotIndex))
+        {
+            AddItem(receivedItem.definitionId, slotIndex);
+            return true;
+        }
+        else
+        {
+            var emptySlot = FindFirstEmptySlot();
+            if (emptySlot == null)
+            {
+                Debug.Log("Inventory full.");
+                return false;
+            }
+            else
+            {
+                AddItem(receivedItem.definitionId, emptySlot.GetIndex());
+                return true;
+            }
+        }
+    }
+    
+    public void DisplayDragItemDummy(bool display)
+    {
+        if (display)
+        {
+            _itemOnDrag.gameObject.SetActive(true);
+            _itemOnDrag.GetComponent<CanvasGroup>().blocksRaycasts = false;
+        }
+        else
+        {
+            _itemOnDrag.gameObject.SetActive(false);
+            _itemOnDrag.GetComponent<CanvasGroup>().blocksRaycasts = true;
+        }
+    }
+
+
+    //  events  - local
+    private void OnItemDrop(int slotId, PointerEventData eventData)
+    {
+        var item = eventData.pointerDrag.GetComponent<InventoryItem>();
+
+        if (item != null)
+        {
+            if (item.origin == _options.origin)
+            {
+                if (_options.allowInternalSwap)
+                {
+                    if (IsSlotEmpty(slotId))
+                    {
+                        _slots[item.parentSlotId].SetEmpty();
+                        _slots[slotId].PlaceItem(item);
+                        item.SetParentSlot(slotId); 
+                    }
+                    else
+                    {
+                        SwapItems(_slots[slotId].GetItemId(), _slots[item.parentSlotId].GetItemId());
+                    }
+                }
+            }
+            else
+            {
+                OnItemDroppedEvent?.Invoke(item, slotId);   
+            }
+        }
+    }
+
+
+    //  signals - global
+    private void OnItemBeginDrag(ItemOrigin origin, int id, PointerEventData eventData)
+    {
+        if (origin == _options.origin)
+        {
+            var item = _items[id];
+            var itemDef = _resources.itemDatabase.FetchItem(item.definitionId);
+
+            _itemOnDrag.definitionId = itemDef.DefId;
+            _itemOnDrag.id = item.id;
+            _itemOnDrag.origin = _options.origin;
+            _itemOnDrag.SetIcon(itemDef.icon);
+            DisplayDragItemDummy(true);
+        }
+    }
+
+    private void OnItemDrag(ItemOrigin origin, int id, PointerEventData eventData)
+    {
+        if (origin == _options.origin)
+        {
+            _itemOnDrag.transform.position = Input.mousePosition;
+        }
+    }
+
+    private void OnItemEndDrag(ItemOrigin origin, int id, PointerEventData eventData)
+    {
+        if (origin == _options.origin)
+        {
+            DisplayDragItemDummy(false);
         }
     }
 
@@ -157,86 +252,20 @@ public class Inventory : MonoBehaviour, IInventoryQuery
         item2.SetParentSlot(slotId1);
     }
 
-    // private bool IsItemInInventoryAlready(string defId)
-    // {
-    //     return _items.Values.Any(item => item.definitionId == defId);
-    // }
+    private InventoryItem GetItemWithAvailableStack(string defId)
+    {
+        var itemDef     = _resources.itemDatabase.FetchItem(defId);
+        var maxStack    = _resources.GetMaxStackByType(itemDef.itemType);
+        var foundItem   = _items.Values.Where(item => item.definitionId == defId)
+                                        .FirstOrDefault(item => item.currentStack < maxStack); 
 
-    // private int GetItemIdWithAvailableStack(string defId)
-    // {
-    //     int itemId = Constants.INVALID;
+        return foundItem;
+    }
 
-    //     var itemDef     = _resources.itemDatabase.FetchItem(defId);
-    //     var maxStack    = _resources.GetMaxStackByType(itemDef.itemType);
-    //     var foundItem   = _items.Values.Where(item => item.definitionId == defId)
-    //                                     .FirstOrDefault(item => item.currentStack < maxStack); 
-
-    //     if (foundItem != null)
-    //     {
-    //         itemId = foundItem.id;
-    //     }
-
-    //     return itemId;
-    // }
-
-    // private int FindFirstEmptySlot()
-    // {
-    //     int index = Constants.INVALID;
-
-    //     var emptySlot = _slots.Values.Where(slot => slot.GetState() == SlotState.Empty).FirstOrDefault();
-    //     if (emptySlot != null)
-    //     {
-    //         index = emptySlot.GetIndex();
-    //     }
-
-    //     return index;
-    // }
-    
-    // private void HandleItemReceive(int slotIndex, InventoryItem receivedItem)
-    // {
-    //     var itemDef = _resources.itemDatabase.FetchItem(receivedItem.definitionId);
-
-    //     //  check if item already in inventory
-    //     if (IsItemInInventoryAlready(itemDef.Id))
-    //     {
-    //         int itemId = GetItemIdWithAvailableStack(itemDef.Id);
-    //         if (itemId == Constants.INVALID)
-    //         {
-    //             int emptySlotIndex = FindFirstEmptySlot();
-    //             if (emptySlotIndex == Constants.INVALID)
-    //             {
-    //                 Debug.Log("Inventory full.");
-    //             }
-    //             else
-    //             {
-    //                 CreateItem(emptySlotIndex, receivedItem.definitionId);
-    //             }
-    //         }
-    //         else
-    //         {
-    //             _items[itemId].IncrementStack();
-    //         }
-
-    //         return;
-    //     }
-
-    //     //  check if slot is filled
-    //     if (IsSlotEmpty(slotIndex))
-    //     {
-    //         int emptySlotIndex = FindFirstEmptySlot();
-    //         if (emptySlotIndex == Constants.INVALID)
-    //         {
-    //             Debug.Log("Inventory full.");
-    //         }
-    //         else
-    //         {
-    //             CreateItem(emptySlotIndex, receivedItem.definitionId);
-    //         }
-    //     }
-    //     else
-    //     {
-    //         CreateItem(slotIndex, receivedItem.definitionId);
-    //     }
-    // }
+    private InventorySlot FindFirstEmptySlot()
+    {
+        var emptySlot = _slots.Values.Where(slot => slot.GetState() == SlotState.Empty).FirstOrDefault();
+        return emptySlot;
+    }
 
 }
