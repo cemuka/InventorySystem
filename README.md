@@ -1,17 +1,25 @@
 ![inventory](./images/inventory.gif)
 
 This is a concept project to build a drag and drop inventory system in unity using with unity ui components.
+I used `Signals` for listening and emitting events.
 
-![inventory](./images/config.png)
+https://github.com/cemuka/SignalSystem
+
+Added a database editor tool to define new items.
+
+![db](./images/db.png)
+
+
 
 Implemented so far:
+- Item database and editor tool
 - Drag and drop slots
-- Easy configuration with a scriptableobject file
-- Tooltip
+- Stacking items
+- Tooltip 
+- Tooltip checking borders
 - Swap slots
-- Stacable items
 - Vendor
+- Right click sell
 
 Todo features:
-- Right click buy and sell
 - Buy and sell stackable items by amount

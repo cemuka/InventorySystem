@@ -7,6 +7,7 @@ public class Tooltip : MonoBehaviour
 {
     public RectTransform parentRect;
     public RectTransform displayRect;
+    public LayoutGroup layout;
     public TMP_Text tipText;
 
     private bool _activated = false;
@@ -16,10 +17,12 @@ public class Tooltip : MonoBehaviour
 
     public void Show(string text)
     {
+        _activated = true;
         this.gameObject.transform.position = Input.mousePosition;
         tipText.text = text;
+        CheckBounds();
+        
         this.gameObject.SetActive(true);
-        _activated = true;
     }
 
     public void Hide()
@@ -34,16 +37,15 @@ public class Tooltip : MonoBehaviour
         parentRect.GetLocalCorners(corners);
         Vector3 screenSize = corners[corners.Length - 1];
 
-        RectTransform contentRectTransform = displayRect;
-        ResetContentPosition(contentRectTransform);
+        ResetContentPosition(displayRect);
 
-        contentRectTransform.GetComponent<VerticalLayoutGroup>().CalculateLayoutInputHorizontal();
-        contentRectTransform.GetComponent<VerticalLayoutGroup>().CalculateLayoutInputVertical();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(contentRectTransform);
+        layout.CalculateLayoutInputHorizontal();
+        layout.CalculateLayoutInputVertical();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(displayRect);
 
 
-        float width  = contentRectTransform.sizeDelta.x;
-        float height = contentRectTransform.sizeDelta.y;
+        float width  = displayRect.sizeDelta.x;
+        float height = displayRect.sizeDelta.y;
 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect,
                                                                 Input.mousePosition,
@@ -53,15 +55,15 @@ public class Tooltip : MonoBehaviour
         float verticalDiff = Mathf.Abs(screenSize.y - _tooltipPosition.y);
         if (height > verticalDiff)
         {
-            contentRectTransform.pivot = new Vector2(contentRectTransform.pivot.x, 0);
-            contentRectTransform.localPosition = Vector3.zero;
+            displayRect.pivot           = new Vector2(displayRect.pivot.x, 0);
+            displayRect.localPosition   = Vector3.zero;
         }
 
         float horizontalDiff = Mathf.Abs(screenSize.x - _tooltipPosition.x);
         if (width > horizontalDiff)
         {
-            contentRectTransform.pivot = new Vector2(1, contentRectTransform.pivot.y);
-            contentRectTransform.localPosition = Vector3.zero;
+            displayRect.pivot           = new Vector2(1, displayRect.pivot.y);
+            displayRect.localPosition   = Vector3.zero;
         }
     }
     

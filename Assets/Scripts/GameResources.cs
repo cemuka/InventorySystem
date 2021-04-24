@@ -26,6 +26,4 @@ public class InventoryConfigurations
 {
     public int maxStackBasicMaterial;
     public int maxStackPolishMaterial;
-    [Header("Player")]
-    public int maxPlayerInventorySlot;
 }
